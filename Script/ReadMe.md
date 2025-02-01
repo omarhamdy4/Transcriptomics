@@ -1,6 +1,7 @@
 # RNA-seq Analysis Using R: DESeq2 Workflow
 #### This notebook demonstrates a step-by-step workflow for analyzing RNA-seq data using DESeq2. The analysis includes preprocessing the expression matrix, handling metadata, identifying differentially expressed genes (DEGs), and Plotting important figures such as volcano plots, Heatmap, and PCA.
 ## The Workflow goes as follow:
+![Script Workflow template biorender](https://github.com/user-attachments/assets/54607715-5edc-40dc-8a71-ce8b3c55d34e)
 ## 1- Loading libraries
 ```{r}
 library(readr)
