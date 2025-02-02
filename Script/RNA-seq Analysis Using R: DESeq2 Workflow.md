@@ -113,10 +113,8 @@ summary(res)  # Summarize the results
 ## 8- Data normalization (VST)
 ```{r Normalization}
 vsn_norm <- counts(dds, normalized=FALSE) %>% vsn2 %>% exprs
-#use 'meanSdPlot' to verify the fit.
 library(hexbin)
 meanSdPlot(vsn_norm)
-#save the normalized data
 write.csv(vsn_norm, "vsn_norm.csv")
 ```
 
