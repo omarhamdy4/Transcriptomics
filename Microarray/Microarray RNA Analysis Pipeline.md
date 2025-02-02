@@ -63,15 +63,6 @@ data = exprs(eset)
 ```{r}
 phenotable = phenotable %>% 
   dplyr::mutate(sampleType = str_extract(Sample_source_name_ch1, "control|KLF4"))
-group1.columns = phenotable %>% 
-  dplyr::filter(str_detect(sampleType, "control")) %>% 
-  dplyr::select(Sample_geo_accession) %>% 
-  dplyr::pull(Sample_geo_accession)
-group2.columns = phenotable %>% 
-  dplyr::filter(str_detect(sampleType, "KLF4")) %>% 
-  dplyr::select(Sample_geo_accession) %>%
-  dplyr::pull(Sample_geo_accession)
-exp = exp[ , c(group1.columns,group2.columns )]
 ```
 
 ## 4- Visualize after Pre-processing
