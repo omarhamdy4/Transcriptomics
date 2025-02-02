@@ -27,8 +27,8 @@ boxplot(log2(read_counts[,-1]+1), main="Exploratory Box plot", ylab="log2_count"
 hist(as.matrix(log2(read_counts[,-1]+1)), main="Exploratory Histogram", xlab="Sample", ylab="log2_count", breaks=50)
 ```
 ## 4- Gene Annotation
+#### Convert gene IDs to gene symbols using org.Hs.eg.db.
 ```{r Annotation}
-# Mapping gene IDs to gene symbols
 gene_ids <- as.character(read_counts$GeneID)  # Ensure gene IDs are characters
 gene_symbol <- mapIds(
   org.Hs.eg.db, keys = gene_ids, keytype = "ENTREZID",
@@ -55,7 +55,7 @@ meta <- meta %>%
     TRUE ~ Condition))
 ```
 ###    (b) Preprocess expression matrix
-### clean the data (NAs, Duplicates, Zero variance genes)
+#### Clean the data (NAs, Duplicates, Zero variance genes)
 #### A- Removing NAs
 ```{r Preprocesing II}
 sum(is.na(data))
@@ -84,30 +84,25 @@ pca <- prcomp(t(log2(exp_data_agg + 1)), scale. = TRUE)
 autoplot(pca, data = meta, colour = 'Condition',frame = T,label = T, label.size = 3,shape="Condition")
 ```
 ## 7- Differential expression analysis (DEseq2)
-
+### Prepare the data
 ```{r DEseq2}
 exp <- exp_data_agg
-# Ensure column names in expression data match metadata
 all(colnames(exp) %in% meta$sampleid)
-all(colnames(exp) == meta$sampleid)
-# Reorder expression data to match metadata
 exp <- exp[, meta$sampleid]
-# Round expression values and factorize conditions
 exp <- round(exp)
 meta$Condition <- factor(meta$Condition, levels = c("Control", "FBZ"))
 class(meta$Condition)  # Check the class of the Condition column
 ```
-
+### Create DESeqDataSet object and Filter out low-count genes
 ```{r Follow DEseq2}
-# Create DESeqDataSet object
 dds <- DESeqDataSetFromMatrix(
   countData = exp,
   colData = meta,
   design = ~ Condition)
-# Filter out low-count genes
 dds <- dds[rowSums(counts(dds)) >= 10,]
-
-# Run DESeq2 analysis
+```
+### Run DESeq2 analysis
+```{r}
 dds_run <- DESeq(dds)
 # Extract results for the contrast FBZ vs Control
 res <- results(dds_run, contrast=c("Condition", "FBZ", "Control"), alpha=0.05)
@@ -138,14 +133,10 @@ write.csv(degs.exp, "degs.exp.csv")
 deg_100 <- degs[order(degs$padj, -abs(degs$log2FoldChange)),]   #sort to get top 100
 deg_100 <- degs[1:100,]                                         #select only them
 deg_100_exp <- vsn_norm[rownames(deg_100),]                     #get their normalized expression values
-
-# Create column annotations for the heatmap
 sam_condition <- meta$Condition
 column_annot <- HeatmapAnnotation(
   Condition = sam_condition,
   col = list(Condition = c("Control" = "limegreen", "FBZ" = "orange")))
-
-# Generate the heatmap
 Heatmap(
   matrix = deg_100_exp,
   top_annotation = column_annot,
@@ -168,7 +159,6 @@ pca_data <-pca_result$x
 pca_result$x
 # Plot 2D PCA
 autoplot(pca_result, data = meta, colour = 'Condition',frame = T,label = T, label.size = 3,shape="Condition")
-
 # Plot 3D PCA
 mycolors <- ifelse(meta$Condition == "FBZ", "red", "lightgreen")
 plot3d(pca_result$x[, 1:3], col = mycolors, size = 12, type = "s", main = "3D PCA Plot")
@@ -177,24 +167,16 @@ plot3d(pca_result$x[, 1:3], col = mycolors, size = 12, type = "s", main = "3D PC
 ```{r Volcano plot}
 res_df <- data.frame(res)
 res_df$gene_symbol <- rownames(res_df)
-
-# Biostatsquid theme
 theme_set(theme_classic(base_size = 20) +
             theme(
               axis.title.y = element_text(face = "bold", margin = margin(0,20,0,0), size = rel(1.1), color = 'black'),
               axis.title.x = element_text(hjust = 0.5, face = "bold", margin = margin(20,0,0,0), size = rel(1.1), color = 'black'),
               plot.title = element_text(hjust = 0.5)))
-# Add a column to the data frame to specify if they are UP- or DOWN- regulated (log2fc respectively positive or negative)
 res_df$diffexpressed <- "NA"
-# if log2Foldchange > 1 and pvalue < 0.05, set as "UP"
 res_df$diffexpressed[res_df$log2FoldChange > 1 & res_df$pvalue < 0.05] <- "UP"
-# if log2Foldchange < -0.6 and pvalue < 0.05, set as "DOWN"
 res_df$diffexpressed[res_df$log2FoldChange < -1 & res_df$pvalue < 0.05] <- "DOWN"
-# Explore a bit
 head(res_df[order(res_df$padj) & res_df$diffexpressed == 'DOWN', ])
-# Create a new column "delabel" to de, that will contain the name of the top 30 differentially expressed genes (NA in case they are not)
 res_df$delabel <- ifelse(res_df$gene_symbol %in% head(res_df[order(res_df$padj), "gene_symbol"], 30), res_df$gene_symbol, NA)
-
 
 ggplot(res_df, aes(x = log2FoldChange, y = -log(padj), col = res_df$diffexpressed),label=delabel) +
   geom_point(alpha = 0.4) +
