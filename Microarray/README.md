@@ -4,6 +4,6 @@
 ## The folder contains 2 folders
 ***
 ### A-Script
-  - contains 2 files one is the complete R scrit and another .md file for a great summary for the process
+  - contains 2 files one is the complete R script and another .md file for a great summary of the process
 ### B-Data
   - contains all the necessary data for the tutorial and its source
