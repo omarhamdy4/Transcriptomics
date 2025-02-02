@@ -1,7 +1,9 @@
 # RNA-seq Analysis Using R: DESeq2 Workflow
-#### This notebook demonstrates a step-by-step workflow for analyzing RNA-seq data using DESeq2. The analysis includes preprocessing the expression matrix, handling metadata, identifying differentially expressed genes (DEGs), and Plotting important figures such as volcano plots, Heatmap, and PCA.
+***
+>#### This notebook demonstrates a step-by-step workflow for analyzing RNA-seq data using DESeq2. The analysis includes preprocessing the expression matrix, handling metadata, identifying differentially expressed genes (DEGs), and Plotting important figures such as volcano plots, Heatmap, and PCA.
 ## The Workflow goes as follow:
 ![Script Workflow template biorender](https://github.com/user-attachments/assets/54607715-5edc-40dc-8a71-ce8b3c55d34e)
+***
 ## 1- Loading libraries
 ```{r}
 library(readr)
@@ -16,16 +18,19 @@ library(ComplexHeatmap)
 library(circlize)
 library(rgl)
 ```
+***
 ## 2- Loading the data and metadata
 ```{r}
 read_counts <- read.delim("E:/1.Fresh Grad/02_EgComBio2023/MODA RNA_seq/GSE275290_raw_counts.tsv")
 metadata <- read.csv("E:/1.Fresh Grad/02_EgComBio2023/MODA RNA_seq/Phenotable.csv")
 ```
+***
 ## 3- Exploratory Data Analysis: Box plot and Histogram
 ```{r Exploration}
 boxplot(log2(read_counts[,-1]+1), main="Exploratory Box plot", ylab="log2_count", las=2)
 hist(as.matrix(log2(read_counts[,-1]+1)), main="Exploratory Histogram", xlab="Sample", ylab="log2_count", breaks=50)
 ```
+***
 ## 4- Gene Annotation
 #### Convert gene IDs to gene symbols using org.Hs.eg.db.
 ```{r Annotation}
@@ -41,6 +46,7 @@ data <- merge(read_counts, gene_df, by="GeneID", all.x=TRUE)
 data <- data %>%
   dplyr::select(Gene_symbol, everything(), -GeneID)
 ```
+***
 ## 5- Preprocessing
 ###    (a) metadata
 ```{r Preprocesing I}
@@ -78,11 +84,13 @@ varrow <- apply(exp_data_agg, 1, var, na.rm=TRUE)
 cons_var <- (varrow == 0 | is.na(varrow))
 exp_data_agg <- exp_data_agg[!cons_var,]
 ```
+***
 ## 6- Follow the exploratory analysis (PCA)
 ```{r PCA}
 pca <- prcomp(t(log2(exp_data_agg + 1)), scale. = TRUE)
 autoplot(pca, data = meta, colour = 'Condition',frame = T,label = T, label.size = 3,shape="Condition")
 ```
+***
 ## 7- Differential expression analysis (DEseq2)
 #### Prepare the data
 ```{r DEseq2}
@@ -109,7 +117,7 @@ res <- results(dds_run, contrast=c("Condition", "FBZ", "Control"), alpha=0.05)
 res <- res[complete.cases(res),]  # Remove rows with NA values
 summary(res)  # Summarize the results
 ```
-
+***
 ## 8- Data normalization (VST)
 ```{r Normalization}
 vsn_norm <- counts(dds, normalized=FALSE) %>% vsn2 %>% exprs
@@ -117,7 +125,7 @@ library(hexbin)
 meanSdPlot(vsn_norm)
 write.csv(vsn_norm, "vsn_norm.csv")
 ```
-
+***
 ### 9- DEGs extraction
 ```{r DEGs}
 degs <- res[res$padj < 0.05 & res$log2FoldChange > 1,]
@@ -125,6 +133,7 @@ degs.genes <- rownames(degs)
 degs.exp <- vsn_norm[degs.genes,]
 write.csv(degs.exp, "degs.exp.csv")
 ```
+***
 ## 10- Downstream plots
 ###    (a) Heatmap for top 100 DEGs
 ```{r Heatmap}
