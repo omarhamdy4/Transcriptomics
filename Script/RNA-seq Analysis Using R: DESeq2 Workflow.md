@@ -84,7 +84,7 @@ pca <- prcomp(t(log2(exp_data_agg + 1)), scale. = TRUE)
 autoplot(pca, data = meta, colour = 'Condition',frame = T,label = T, label.size = 3,shape="Condition")
 ```
 ## 7- Differential expression analysis (DEseq2)
-### Prepare the data
+#### Prepare the data
 ```{r DEseq2}
 exp <- exp_data_agg
 all(colnames(exp) %in% meta$sampleid)
@@ -93,7 +93,7 @@ exp <- round(exp)
 meta$Condition <- factor(meta$Condition, levels = c("Control", "FBZ"))
 class(meta$Condition)  # Check the class of the Condition column
 ```
-### Create DESeqDataSet object and Filter out low-count genes
+#### Create DESeqDataSet object and Filter out low-count genes
 ```{r Follow DEseq2}
 dds <- DESeqDataSetFromMatrix(
   countData = exp,
@@ -101,7 +101,7 @@ dds <- DESeqDataSetFromMatrix(
   design = ~ Condition)
 dds <- dds[rowSums(counts(dds)) >= 10,]
 ```
-### Run DESeq2 analysis
+#### Run DESeq2 analysis
 ```{r}
 dds_run <- DESeq(dds)
 # Extract results for the contrast FBZ vs Control
