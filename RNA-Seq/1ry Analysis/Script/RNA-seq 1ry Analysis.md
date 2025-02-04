@@ -1,6 +1,6 @@
 # RNA-Seq Primary Analysis Pipeline
 ***
-![RNA-seq Primary Analysis Pipeline pipeline template](https://github.com/user-attachments/assets/3e921b76-6028-488b-92f5-dc2640a2e16a)
+![RNA-seq Primary Analysis Pipeline pipeline template](https://github.com/user-attachments/assets/5172d0b1-9763-4598-bfe0-7865d79c9bf2)
 
 ## ***Zero Step*** (Samples Download) --------------------------------------
 #### ***[Note:]*** 
