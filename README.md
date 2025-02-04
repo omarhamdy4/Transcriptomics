@@ -1,6 +1,6 @@
 # TRANSCRIPTOMICS
 ***
->## This Folder Is Your Guide Transcriptomics Computational Analysis:
+>## This Folder Is Your Guide to Transcriptomics Computational Analysis:
 ***
 ### ***A- RNA-Seq (1ry & 2ry Analysis)***
 ### ***B- RNA Microarray Analysis***
