@@ -4,7 +4,7 @@
 
 ## ***Zero Step*** (Samples Download) --------------------------------------
 #### ***[Note:]*** 
-You can download samples using SRAtoolkit from the command line, but in my case I downloaded the samples using SRA run selector tool on NCBI (SRA) database
+_You can download samples using SRAtoolkit from the command line, but in my case I downloaded the samples using SRA run selector tool on NCBI (SRA) database_
 ```{bash}
 mkdir ~/Transcriptome_NGS 
 cd ~/Transcriptome_NGS
