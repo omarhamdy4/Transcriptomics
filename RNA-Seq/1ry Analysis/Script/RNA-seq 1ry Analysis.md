@@ -19,7 +19,7 @@ fastqc *.fastq
 ## ***Second Step*** (QC) --------------------------------------------------
 ### Run trimmomatic tool to loop on all the .fastq files
 ```{bash}
-for R1 in *.fastq ; do R2="${R1%_R1.fastq}_R2.fastq"; trimmomatic PE $R1 $R2 ${R1%.fastq}_trimmed.fq.gz ${R1%.fastq}_dr>
+for R1 in *.fastq ; do R2="${R1%_R1.fastq}_R2.fastq"; trimmomatic PE $R1 $R2 ${R1%.fastq}_trimmed.fq.gz ${R1%.fastq}_drop.fq.gz ${R2%.fastq}_trimmed.fq.gz ${R2%.fastq}_drop.fq.gz ILLUMINACLIP:./adaptor.fa:2:30:10:2:True LEADING:3 TRAILING:3 MINLEN:100; done>
 ```
 
 ## ***Third Step*** (Quality Check II) -------------------------------------
