@@ -34,8 +34,10 @@ If not then you need to adjust the trimmomatic parameters according to your samp
 ## ***Forth Step*** (Alignment & Quantification)----------------------------
 ### Pesudoalignment (splice-aware alignment) using Kallisto against the human index
 ```{bash}
-for R1 in *R1_trimmed.fq.gz ;do R2="${R1%_R1_trimmed.fq.gz}_R2_trimmed.fq.gz" ; kallisto quant -i human2.idx -o "${R1%_>
+for R1 in *R1_trimmed.fq.gz ;do R2="${R1%_R1_trimmed.fq.gz}_R2_trimmed.fq.gz" ; kallisto quant -i human2.idx -o "${R1%_R1_trimmed.fq.gz}_folder" ./$R1 ./$R2 ;done 
 ```
+*_(**The output will be a folder with the sample name containing an abundance.tsv file in it for that exact sample**)_
+
 ## ***Fifth Step*** (Merging the Counts Files) -----------------------------
 ### Joining the matrices
 #### 1️⃣ Define Output File
