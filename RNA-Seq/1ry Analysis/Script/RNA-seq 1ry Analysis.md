@@ -11,8 +11,9 @@ cd ~/Transcriptome_NGS
 ```
 ## ***First Step*** (Quality Check I) --------------------------------------
 ### Check the quality of all the samples (using FastQC)
+#### ***[Note:]*** 
+_All my samples were downloaded in the directory created at the very beginning_
 ```{bash}
-Do fastqc for all .fastq files
 fastqc *.fastq
 ```
 
