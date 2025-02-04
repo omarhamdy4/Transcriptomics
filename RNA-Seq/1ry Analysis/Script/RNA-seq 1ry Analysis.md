@@ -1,7 +1,7 @@
 # RNA-Seq Primary Analysis Pipeline
 ***
 ![RNA-seq Primary Analysis Pipeline pipeline template](https://github.com/user-attachments/assets/5172d0b1-9763-4598-bfe0-7865d79c9bf2)
-
+***
 ## ***Zero Step*** (Samples Download) --------------------------------------
 #### ***[Note:]*** 
 _You can download samples using SRAtoolkit from the command line, but in my case I downloaded the samples using SRA run selector tool on NCBI (SRA) database_
@@ -9,6 +9,8 @@ _You can download samples using SRAtoolkit from the command line, but in my case
 mkdir ~/Transcriptome_NGS 
 cd ~/Transcriptome_NGS
 ```
+
+***
 ## ***First Step*** (Quality Check I) --------------------------------------
 ### Check the quality of all the samples (using FastQC)
 #### ***[Note:]*** 
@@ -17,12 +19,14 @@ _All my samples were downloaded in the directory created at the very beginning_
 fastqc *.fastq
 ```
 
+***
 ## ***Second Step*** (QC) --------------------------------------------------
 ### Run trimmomatic tool to loop on all the .fastq files
 ```{bash}
 for R1 in *.fastq ; do R2="${R1%_R1.fastq}_R2.fastq"; trimmomatic PE $R1 $R2 ${R1%.fastq}_trimmed.fq.gz ${R1%.fastq}_drop.fq.gz ${R2%.fastq}_trimmed.fq.gz ${R2%.fastq}_drop.fq.gz ILLUMINACLIP:./adaptor.fa:2:30:10:2:True LEADING:3 TRAILING:3 MINLEN:100; done>
 ```
 
+***
 ## ***Third Step*** (Quality Check II) -------------------------------------
 ### Do fastqc for all .fastq files again to check if everything is alright
 ```{bash}
@@ -32,6 +36,7 @@ fastqc *_trimmed.fq.gz
 _If the quality is acceptable then proceed to next step (i.e. no adapter sequences or low quality base pairs),_
 _If not then you need to adjust the trimmomatic parameters according to your sample and do QC again_
 
+***
 ## ***Forth Step*** (Alignment & Quantification)----------------------------
 ### Pesudoalignment (splice-aware alignment) using Kallisto against the human index
 #### ***[Note:]*** 
@@ -44,7 +49,7 @@ for R1 in *R1_trimmed.fq.gz ;do R2="${R1%_R1_trimmed.fq.gz}_R2_trimmed.fq.gz" ; 
 #### ***[Note:]*** 
 _The Fasta file supplied can be either in plaintext or gzipped format. Note: Do not supply the genome Fasta file; the Fasta file must be a transcriptome Fasta._
 
-
+***
 ## ***Fifth Step*** (Merging the Counts Files) -----------------------------
 ### Joining the matrices
 #### 1️⃣ Define Output File
