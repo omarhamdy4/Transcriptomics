@@ -29,8 +29,8 @@ for R1 in *.fastq ; do R2="${R1%_R1.fastq}_R2.fastq"; trimmomatic PE $R1 $R2 ${R
 fastqc *_trimmed.fq.gz
 ```
 #### ***[Note:]*** 
-If the quality is acceptable then proceed to next step (i.e. no adapter sequences or low quality base pairs),
-If not then you need to adjust the trimmomatic parameters according to your sample and do QC again 
+_If the quality is acceptable then proceed to next step (i.e. no adapter sequences or low quality base pairs),_
+_If not then you need to adjust the trimmomatic parameters according to your sample and do QC again_
 
 ## ***Forth Step*** (Alignment & Quantification)----------------------------
 ### Pesudoalignment (splice-aware alignment) using Kallisto against the human index
