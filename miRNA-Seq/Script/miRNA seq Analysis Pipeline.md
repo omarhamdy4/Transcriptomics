@@ -1,3 +1,5 @@
+# miRNA seq Analysis Pipeline
+## 0- Session Info 
 ---
 #################################################
 #- miRNA seq                                    #
@@ -8,7 +10,7 @@
 #- Copyright: Omar Hamdy                        #
 ---
 
-# 1- Load Libraries
+## 1- Load Libraries
 
 ------------------------------------------------------------------------
 
@@ -29,10 +31,10 @@ data.path="E:/1.Fresh Grad/02_EgComBio2023/MODA miRNA/TCGA_BRCA/miRNA_samples_Tr
 file_pattern = "mirbase21.mirnas.quantification.txt"
 ```
 
-# 2- Load Data
+## 2- Load Data
 
 ------------------------------------------------------------------------
-### Read the samples files
+#### Read the samples files
 ```{r}
 files <- list.files(path=data.path,recursive=T, pattern = file_pattern)
 # read the first file for the first time
@@ -51,29 +53,29 @@ for(i in 1: length(files)){
   exp=cbind(exp,temp[,2])
   colnames(exp)[dim(exp)[2]]=file.id}
 ```
-### Load Metadata
+#### Load Metadata
 ```{r}
 pheno <- read.delim("TCGA_BRCA/gdc_sample_sheet.2025-02-09.tsv")
 table(pheno$`Sample.Type`)
 
 ```
-# 3- Pre-Processing
+## 3- Pre-Processing
 
 ------------------------------------------------------------------------
-### Check duplication of of miRNAs symbols
+#### Check duplication of of miRNAs symbols
 ```{r}
 #? Do we need that ? let's see.
 sum(duplicated(rownames(exp)))  
 ### no we don't.  so no need for aggregation
 ```
-### making rownames for exp
+#### Making rownames for exp
 ```{r}
 mirnas.names=exp[,1]
 exp=exp[,-1]
 exp=apply (exp, 2,as.integer)
 rownames(exp)=mirnas.names
 ```
-### Changing column names of matrix from file ID to sample ID
+#### Changing column names of matrix from file ID to sample ID
 ```{r}
 exp2 <- exp
 File.ID <- colnames(exp2)
@@ -88,10 +90,10 @@ exp_final=apply (exp_final, 2,as.integer)
 rownames(exp_final)=miRNA.ID
 
 ```
-# 4- QC
+## 4- QC
 
 ------------------------------------------------------------------------
-### Removing Zero variance miRNAs
+#### Removing Zero variance miRNAs
 ```{r}
 dim(exp_final)
 varrow <- apply(exp_final, 1, var, na.rm=TRUE)
@@ -102,39 +104,39 @@ dim(exp_final)
 
 ```
 
-# 5- Differential expression analysis (*DEseq2*)
+## 5- Differential expression analysis (*DEseq2*)
 
 ------------------------------------------------------------------------
 
+#### remove the low counts data(recomended by deseq2)
 ```{r}
-### remove the low counts data(recomended by deseq2)
 exp_final=exp_final[which(rowSums(exp_final) > 10),]
-### check all samples are in metadata
 ```
+#### check all samples are in metadata
 ```{r}
 all(colnames(exp_final) %in% pheno$Sample.ID)
-### check all samples are in same order as metadata
 ```
+#### check all samples are in same order as metadata
 ```{r}
 all(colnames(exp_final) == pheno$Sample.ID)
 #Re-order the matrix to be the same as in metadata
 exp_final=exp_final[,pheno$Sample.ID]
 ```
-### Create DEseq2 object and run it
+#### Create DEseq2 object and run it
 ```{r}
 table(pheno$Sample_Type)
 
 dds = DESeqDataSetFromMatrix( countData = exp_final, colData = pheno , design = ~ Sample.Type)
 dds.run = DESeq(dds)
 ```
-### Specifying the contrast (to make a res object based on two specific conditions/treatment)
+#### Specifying the contrast (to make a res object based on two specific conditions/treatment)
 ```{r}
 res=results(dds.run, contrast = c("Sample.Type","Primary Tumor" ,"Solid Tissue Normal") )
 res=res[complete.cases(res), ] # remove nulls (recommended by deseq2)
 summary(res)
 plotMA(res)
 ```
-### Extract DEMs (the criteria of selection differs according to your study design here are two examples)
+#### Extract DEMs (the criteria of selection differs according to your study design here are two examples)
 ```{r}
 # DEMs based on p-adjusted value only
 res.df=as.data.frame(res)
@@ -151,29 +153,29 @@ write.csv(res.dems2,"Dems_2.csv")
 ```
 
 
-# 6- Normalization
+## 6- Normalization
 ***
 
 
-### get the normalized and logged transformed values of all exp data
+#### get the normalized and logged transformed values of all exp data
 ```{r Normalization}
 ntd=normTransform(dds)
 exp.norm= assay(ntd)
 ```
-### get the normalized expression levels of the dems ###################
+#### get the normalized expression levels of the dems ###################
 ```{r}
 dems.exp=exp.norm[dems,]
 save(exp.norm,  pheno, file="MODA_miRNA_Seq.RDATA")
 #load("MODA_miRNA_Seq.RDATA")
 ```
-### Scale the data
+#### Scale the data
 ```{r}
 exp.norm.scaled=scale(exp.norm,center = TRUE, scale = TRUE)
 ```
 
-# 7- Visualization and Downstream Plots
+## 7- Visualization and Downstream Plots
 ***
-## 7- (a) Boxplot & Density plot
+### 7- (a) Boxplot & Density plot
 
 ```{r}
 boxplot(exp.norm.scaled[, 1:100], col = "purple",
@@ -196,9 +198,9 @@ boxplot(exp.norm.scaled[1:100,1:100], main="After log2 + Scaled " ,horizontal=T,
 ```
 
 
-## 7- (b) Heatmap
+### 7- (b) Heatmap
 
-### Create column annotations for the heatmap
+#### Create column annotations for the heatmap
 ```{r}
 pheno <- mutate(pheno,
             Condition=case_when(
@@ -212,7 +214,7 @@ column_annot <- HeatmapAnnotation(
   Condition = sam_condition,
   col = list(Condition = c("Breast_Cancer" = "purple", "Healthy_Control" = "violet","Metastatic"="pink")))
 ```
-### Generate the heatmap for DEMs
+#### Generate the heatmap for DEMs
 ```{r}
 Heatmap(
   matrix = dems.exp,
@@ -228,14 +230,14 @@ Heatmap(
   column_names_centered = TRUE)
 ```
 
-## 7- (c) PCA
+### 7- (c) PCA
 
-### PCA for All data
+#### PCA for All data
 ```{r}
 pca.2 <- prcomp(t(log2(exp.norm + 1)), scale. = T)
 autoplot(pca.2, data = pheno, colour = 'Condition',frame = Z,label = F, label.size = 3,shape="Condition")+ theme_classic()
 ```
-### PCA for DEMs only
+#### PCA for DEMs only
 ```{r}
 pca.3 <- prcomp(t(log2(dems.exp + 1)), scale. = T)
 autoplot(pca.3, data = pheno, colour = 'Condition',frame = F,label = F, label.size = 3,shape="Condition")+ theme_classic()
@@ -243,9 +245,9 @@ autoplot(pca.3, data = pheno, colour = 'Condition',frame = F,label = F, label.si
 
 
 ```
-## 7- (d) Volcano plot
+### 7- (d) Volcano plot
 
-### Pre-process metadata and deseq2 results
+#### Pre-process metadata and deseq2 results
 ```{r}
 res_df <- data.frame(res)
 res_df$gene_symbol <- rownames(res_df)
@@ -263,7 +265,7 @@ res_df$delabel <- ifelse(res_df$gene_symbol %in% head(res_df[order(res_df$log2Fo
 #for UP miRNAs
 res_df$delabel2 <- ifelse(res_df$gene_symbol %in% head(res_df[order(res_df$log2FoldChange,decreasing=T), "gene_symbol"], 5), res_df$gene_symbol, NA)
 ```
-### Run the plot
+#### Run the plot
 ```{r}
 ggplot(res_df, aes(x = log2FoldChange, y = -log(padj), col = res_df$diffexpressed),label=delabel) +
   geom_point(alpha = 0.4) +
@@ -287,8 +289,8 @@ geom_text_repel(label=res_df$delabel2,max.overlaps = Inf)
 ```
 
 
-## 7- (e) ROC curve & AUC values
-## A- roc curve plotting for miRNA
+### 7- (e) ROC curve & AUC values
+### A- roc curve plotting for miRNA
 ```{r}
 x <- select(pheno, "Condition")
 colnames(x) <- "disease_state"
@@ -316,15 +318,15 @@ CallMe <- function(q) {
 }
 CallMe("hsa.mir.940")
 ```
-## B- Generating AUC values for all the DEMs
-### Preprocessing
+### B- Generating AUC values for all the DEMs
+#### Preprocessing
 ```{r AUC filtering DEMs}
 #remove the metastatic samples
 metastatic_samples <- unlist(c("TCGA-E2-A15E-06A","TCGA-E2-A15K-06A","TCGA-AC-A6IX-06A","TCGA-BH-A1ES-06A","TCGA-BH-A1FE-06A","TCGA-E2-A15A-06A","TCGA-BH-A18V-06A"))
 Nx3 <-exp.norm.scaled[,!colnames(exp.norm.scaled)%in% metastatic_samples]
 Nx3 <- t(Nx3)
 ```
-### Function creation and calling
+#### Function creation and calling
 ```{r}
 CallMeLOOP7<- function(file_path) {
         dataz <- read.csv(file_path, header = TRUE)
@@ -344,7 +346,7 @@ CallMeLOOP7<- function(file_path) {
         write.csv(dataz, file = file_path, row.names = FALSE)  # Overwrite the original file with the updated data
 }
 ```
-### provide the path to your previously saved DEMs .csv file
+#### provide the path to your previously saved DEMs .csv file
 ```{r}
 CallMeLOOP7("E:/1.Fresh Grad/02_EgComBio2023/MODA miRNA/Dems_2.csv")
 # Now go back to the file you provided and a new column with auc value for all your miRNAs
