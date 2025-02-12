@@ -8,3 +8,5 @@
 ####  6) Add all to cart and then download your cart
 ####  7) Download also the associated data samples sheet
 ### You should now have the same samples used in this tutorial!!
+
+![image](https://github.com/user-attachments/assets/cd40cf90-bc56-4718-b770-af768268bd40)
