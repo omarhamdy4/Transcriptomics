@@ -33,7 +33,7 @@ library(factoextra)
 library(ggfortify)
 library(ggrepel)
 ```
-#### change the path parameters according to the location of your data in your labtop.
+#### Change the path parameters according to the location of your data in your labtop.
 ```{r}
 setwd("E:/1.Fresh Grad/02_EgComBio2023/MODA miRNA")
 data.path="E:/1.Fresh Grad/02_EgComBio2023/MODA miRNA/TCGA_BRCA/miRNA_samples_Transcriptome_profile"
