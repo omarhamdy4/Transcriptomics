@@ -1,5 +1,12 @@
 # miRNA seq Analysis Pipeline
+***
+>#### This notebook demonstrates a step-by-step workflow for analyzing miRNA-seq data using DESeq2. The analysis includes preprocessing the expression matrix & metadata, identifying differentially expressed miRNAs (DEMs), and Plotting important figures such as volcano plots, PCA, Heatmap, and ROC curve.
+## The Workflow goes as follow:
+
+
+
 ## 0- Session Info 
+```{r}
 ---
 #################################################
 #- miRNA seq                                    #
@@ -9,7 +16,7 @@
 #- 2025- 2- 10                                  #
 #- Copyright: Omar Hamdy                        #
 ---
-
+```
 ## 1- Load Libraries
 
 ------------------------------------------------------------------------
