@@ -4,7 +4,7 @@
 ####  2) Use the search bar and search for BRCA then select the project then save a new cohort
 ####  3) select your saved cohort from top bar and then go to the repository section
 ####  4) Filter the project and select miRNA check box and also select transcriptome profiling check box
-####  5) Yu should have a Total of 2,414 Files 1,079 Cases
+####  5) You should have a Total of 2,414 Files 1,079 Cases
 ####  6) Add all to cart and then download your cart
 ####  7) Download also the associated data samples sheet
 ### You should now have the same samples used in this tutorial!!
