@@ -3,6 +3,7 @@
 >#### This notebook demonstrates a step-by-step workflow for analyzing miRNA-seq data using DESeq2. The analysis includes preprocessing the expression matrix & metadata, identifying differentially expressed miRNAs (DEMs), and Plotting important figures such as volcano plots, PCA, Heatmap, and ROC curve.
 ## The Workflow goes as follow:
 
+![miRNA-seq Analysis Pipeline template](https://github.com/user-attachments/assets/12bb54ac-9f52-4970-bf88-5886f1981a69)
 
 
 ## 0- Session Info 
@@ -31,9 +32,10 @@ library(ComplexHeatmap)
 library(factoextra)
 library(ggfortify)
 library(ggrepel)
-
+```
+#### change the path parameters according to the location of your data in your labtop.
+```{r}
 setwd("E:/1.Fresh Grad/02_EgComBio2023/MODA miRNA")
-#change the path parameters according to the location of your data in your labtop.
 data.path="E:/1.Fresh Grad/02_EgComBio2023/MODA miRNA/TCGA_BRCA/miRNA_samples_Transcriptome_profile"
 file_pattern = "mirbase21.mirnas.quantification.txt"
 ```
