@@ -1,5 +1,8 @@
-### This repository is for the miRNA seq analysis
-![image](https://github.com/user-attachments/assets/1e7e69c4-6244-4d24-9c08-efa5f55d0a9b)
+## This repository is for the miRNA seq analysis
+
+![image](https://github.com/user-attachments/assets/e1c82a66-8902-4cbe-bafa-e7943beb3dd4)
+
+![image](https://github.com/user-attachments/assets/55cb4ebd-b3c4-4906-babd-aef18011358f)
 
 ## The folder contains 2 folders
 ***
