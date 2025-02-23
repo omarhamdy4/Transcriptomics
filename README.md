@@ -2,6 +2,7 @@
 ***
 >## This Repository is your Guide to Transcriptomics Computational Analysis:
 ***
+## This repository contains the following folders  
 ### ***A- RNA-Seq (1ry & 2ry Analysis)***
 ### ***B- RNA Microarray Analysis***
 ### ***C- miRNA-Seq Analysis***
