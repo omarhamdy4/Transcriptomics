@@ -4,8 +4,9 @@
 ***
 ## ***Zero Step*** (Samples Download) --------------------------------------
 #### ***[Note:]*** 
-_You can download samples using SRAtoolkit from the command line, but in my case I downloaded the samples using SRA run selector tool on NCBI (SRA) database_
+_You can either download samples using SRAtoolkit from the command line or download them using SRA run selector tool on NCBI (SRA) database_
 ```{bash}
+fastq-dump SRR14218091 SRR14218092 SRR14218093 SRR14218094 SRR14218095 SRR14218096 SRR14218097 SRR14218098 SRR14218099 SRR14218100 SRR14218101 SRR14218102 SRR14218103 SRR14218104 SRR14218105 SRR14218106 SRR14218107 SRR14218108 SRR14218109 SRR14218110 SRR14218111 SRR14218112 SRR14218113 SRR14218114 SRR14218115 SRR14218116 SRR14218117 SRR14218118
 mkdir ~/Transcriptome_NGS 
 cd ~/Transcriptome_NGS
 ```
@@ -41,9 +42,17 @@ _If not then you need to adjust the trimmomatic parameters according to your sam
 ### Pesudoalignment (splice-aware alignment) using Kallisto against the human index
 #### ***[Note:]*** 
 *kallisto is a program for quantifying abundances of transcripts from bulk and single-cell RNA-Seq data, or more generally of target sequences using high-throughput sequencing reads. It is based on the novel idea of pseudoalignment for rapidly determining the compatibility of reads with targets, ***without the need for alignment.*** Pseudoalignment of reads preserves the key information needed for quantification, and kallisto is therefore not only fast, but also as accurate as existing quantification tools. In fact, because the pseudoalignment procedure is robust to errors in the reads, in many benchmarks kallisto significantly outperforms existing tools.*
-
+#### 1️⃣ Download human genome cdna
 ```{bash}
-for R1 in *R1_trimmed.fq.gz ;do R2="${R1%_R1_trimmed.fq.gz}_R2_trimmed.fq.gz" ; kallisto quant -i human2.idx -o "${R1%_R1_trimmed.fq.gz}_folder" ./$R1 ./$R2 ;done 
+curl -O ftp://ftp.ensembl.org/pub/release-111/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz
+```
+#### 2️⃣ Index the genome cdna
+```{bash}
+kallisto index -i GRCh38_cdna.idx Homo_sapiens.GRCh38.cdna.all.fa
+```
+#### 3️⃣ Run the kallisto tool to loop on all samples
+```{bash}
+for i in *.fastq ;do echo "-------------------Sample----"$i"-------------------------------" ;kallisto quant --single -s 20 -l 200 -i GRCh38_cdna.idx -o "${i%.fastq}_folder" ./$i; done
 ```
 *_(**The output will be a folder with the sample name containing an abundance.tsv file which is the estimated counts for that exact sample**)_
 #### ***[Note:]*** 
