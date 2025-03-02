@@ -98,7 +98,7 @@ exp <- exp_data_agg
 all(colnames(exp) %in% meta$sampleid)
 exp <- exp[, meta$sampleid]
 exp <- round(exp)
-meta$Condition <- factor(meta$Condition, levels = c("Control", "FBZ"))
+meta$Condition <- factor(meta$Condition, levels = c("FBZ", "Control"))
 class(meta$Condition)  # Check the class of the Condition column
 ```
 #### Create DESeqDataSet object and Filter out low-count genes
